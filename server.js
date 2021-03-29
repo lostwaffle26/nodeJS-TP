@@ -6,7 +6,7 @@ const dbName = 'DBChat';
 const MongoClient = require('mongodb').MongoClient;
 
 // Partie socket.io et MongoDB
-MongoClient.connect((err, instance) => {
+MongoClient.connect(url, function(err, instance) {
     if (err) {
         process.exit(1);
     } else {
@@ -20,7 +20,7 @@ MongoClient.connect((err, instance) => {
             Pseudo: 'Steve',
             message: 'HellO wORLD'
         });
-     
+        
 
         collection.find({}, (err, rawResults) => {
             rawResults.forEach(results => console.log(results));
