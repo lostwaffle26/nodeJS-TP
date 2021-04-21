@@ -1,35 +1,59 @@
 const express = require('express');
 const app = express();
 const http = require('http').Server(app);
-const url = 'mongodb://localhost:27017';
-const dbName = 'DBChat';
+const io = require('socket.io')(http);
 const MongoClient = require('mongodb').MongoClient;
+const url = 'mongodb://localhost:27017'
+const dbName = 'MaDBChat';
 
-// Partie socket.io et MongoDB
-MongoClient.connect(url, function(err, instance) {
-    if (err) {
+MongoClient.connect(url, function(err, client) {
+
+    if(err){
         process.exit(1);
-    } else {
+    }
+    
+    else{
         console.log("Connecté à MongoDB");
-
-        app.get('/', (req, res) => res.redirect('/chat'));
-
-        const db = instance.db('DBChat');
+        const db = client.db(dbName);
         const collection = db.collection('ChatsMessages');
-        collection.insertOne({
-            Pseudo: 'Steve',
-            message: 'HellO wORLD'
-        });
-        
+        let nb_user = 0;
+        app.use("/", express.static(__dirname + "/public"));
 
-        collection.find({}, (err, rawResults) => {
-            rawResults.forEach(results => console.log(results));
+        io.on('connection', function (socket) {
+            let connected;
+
+            console.log('a user connected');
+            socket.on('user-login', function (user) {
+                connected = user;
+                nb_user = nb_user + 1;
+                socket.broadcast.emit('nb_users', nb_user);
+                if (connected !== undefined) {
+                    let serviceMessage = {
+                        text: 'User "' + connected.username + '" logged in',
+                        type: 'login'
+                    };
+
+                    socket.broadcast.emit('service-message', serviceMessage);
+                    socket.broadcast.emit('nb_users', nb_user);
+                }
+            });
+
+            socket.on('chat-message', function (message) {
+                message.username = connected.username;
+                io.emit('chat-message', message);
+                console.log('Message de ' + connected.username + ': ' + message.text);
+                collection.insertOne({Pseudo : connected.username, message : message.text}); 
+                socket.broadcast.emit('nb_users', nb_user);
+            });
         });
 
-        http.listen(3000, () => console.log('Server READY'));
+
+        //Lancement du server sur le port 3000
+        http.listen(3000, function () {
+            console.log('Server is listening on *:3000');
+        });
     }
 });
-
 
 
 /// Partie Express

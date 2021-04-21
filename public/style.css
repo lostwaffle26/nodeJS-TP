@@ -1,0 +1,118 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: cornflowerblue;
+}
+
+body {
+    font: 13px Helvetica, Arial;
+    transition: all 0.5s;
+}
+
+#chat form {
+    padding: 3px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 50px;
+    display: flex;
+}
+
+#chat form input {
+    background-color: white;
+    border: 0;
+    padding: 5px 10px;
+    width: 40%;
+    height: 100%;
+    margin-right: .5%;
+	font-size: 20px;
+}
+
+#chat form button {
+    height: 100%;
+    width: 10%;
+    background: black;
+    float: right;
+    border: none;
+    font-size: 17px;
+    color: white;
+}
+
+#chat #messages {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    font-size: 15px;
+}
+
+#chat #messages li {
+    padding: 5px 10px;
+}
+
+#chat #messages li:nth-child(odd) {
+    background: #eee;
+}
+
+#logged-out #chat {
+    filter: blur(5px);
+    -webkit-filter: blur(5px);
+}
+
+#logged-out #login {
+    opacity: 1;
+}
+
+#login {
+    transition: all 0.5s;
+    opacity: 0;
+    text-align: center;
+    position: absolute;
+    width: 100%;
+    height: max-content;
+    padding-top: 40px;
+}
+
+#login label{
+	display: block;
+    margin-bottom: 25px;
+    font-size: 1.5rem;
+}
+
+#login input#u {
+	font-size: 25px;
+	text-align: center;
+	padding: 5px;
+	border: 5px solid rgb(255, 255, 255);
+    width: 20%;
+
+}
+
+#login input#u:focus {
+	outline: none;
+}
+
+#login button {
+	background: black;
+	padding: 8px 30px;
+	color: white;
+	font-size: 20px;
+	margin-top: 20px;
+	cursor: pointer;
+
+}
+
+#chat #messages li span.username {
+	display: inline-block;
+	padding: 6px 10px;
+	margin-right: 5px;
+	color: white;
+	background: black;
+    border: 2px solid black;
+	border-radius: 5px;
+}
+
+#users_connected{
+    margin: auto 0px;
+    width: max-content;
+}
